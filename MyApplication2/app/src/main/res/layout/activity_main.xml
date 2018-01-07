@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
-        android:textColor="@color/white"
+        android:textColor="@color/White"
         android:textSize="26dp"
         android:textStyle="normal" />
 
@@ -27,8 +27,8 @@
 
         <ImageButton
             android:id="@+id/btnSpeak"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:background="@null"
             android:src="@drawable/mic"
             />
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/tap_on_mic"
-            android:textColor="@color/white"
+            android:textColor="@color/White"
             android:textSize="15dp"
             android:textStyle="normal" />
     </LinearLayout>
