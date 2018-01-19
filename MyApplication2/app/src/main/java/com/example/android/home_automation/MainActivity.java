@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -72,14 +71,24 @@ public class MainActivity extends Activity {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     txtSpeechInput.setText(result.toString());
-                    //Text_processing txt = new Text_processing(this);
-                    //txt.str(result.toString());
-                    PythonCallerInput pythonCallerInput = new PythonCallerInput();
-                    try{
-                        pythonCallerInput.pyt(result.toString());
-                    }catch (IOException e)
+                    Text_processing textProcessing= new Text_processing();
+                    int flag=textProcessing.txt_pro(result.toString(),txtSpeechInput);
+                    if(flag==0)
                     {
-                        e.printStackTrace();
+                        if(textProcessing.getFan()==0&&textProcessing.getLight()==0)
+                        {
+                            txtSpeechInput.setText("Current Status:\n"+"Lights: OFF\n"+"Fans: OFF");
+                        }
+                        else if(textProcessing.getFan()==1&&textProcessing.getLight()==0)
+                        {
+                            txtSpeechInput.setText("Current Status:\n"+"Lights: OFF\n"+"Fans: ON");
+                        }
+                        else if(textProcessing.getFan()==0&&textProcessing.getLight()==1)
+                        {
+                            txtSpeechInput.setText("Current Status:\n"+"Lights: ON\n"+"Fans: OFF");
+                        }
+                        else
+                            txtSpeechInput.setText("Current Status:\n"+"Lights: ON\n"+"Fans: ON");
                     }
                 }
                 break;

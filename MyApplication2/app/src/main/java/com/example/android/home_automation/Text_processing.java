@@ -1,120 +1,120 @@
 package com.example.android.home_automation;
 
-import android.content.Context;
+import android.app.Activity;
+import android.widget.TextView;
 
-import org.python.core.PyInstance;
-import org.python.util.PythonInterpreter;
+import java.util.ArrayList;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import static java.lang.Math.abs;
 
-public class Text_processing {
 
-    PythonInterpreter interpreter = null;
-    private Context context;
+/**
+ * Created by user on 1/19/18.
+ */
 
-    public Text_processing(Context context) {
-        this.context = context;
-        PythonInterpreter.initialize(System.getProperties(),
-                System.getProperties(), new String[0]);
-        this.interpreter = new PythonInterpreter();
+public class Text_processing extends Activity {
+    ArrayList<String> noun=new ArrayList<String>();
+    ArrayList<String> verb= new ArrayList<String>();
+    ArrayList<String> compound = new ArrayList<String>();
+    int fan,light;
+
+    public Text_processing(){
+        noun.add("fan");
+        noun.add("fans");
+        noun.add("light");
+        noun.add("lights");
+        verb.add("on");
+        verb.add("off");
+        compound.add("and");
+        compound.add("but");
+        compound.add("or");
+        fan=0;
+        light=0;
     }
-
-    void execfile(final String fileName) {
-        this.interpreter.execfile(fileName);
-    }
-
-    PyInstance createClass(final String className, final String opts) {
-        return (PyInstance) this.interpreter.eval(className + "(" + opts + ")");
-    }
-
-    public void str(String str1) {
-        /*String scriptName = "Text_Processing";
-        try{
-            interpreter.exec("import sys\n" + "import os \n" + "from "+scriptName+" import * \n");
-        }catch (Exception e){
-            e.printStackTrace();
+    public int txt_pro(String str1,TextView textView) {
+        String str = str1.toLowerCase();
+        ArrayList<String> tokens = new ArrayList<String>();
+        for (String word : str.split(" ")) {
+            tokens.add(word);
         }
-        try {
-        interpreter.exec(scriptName);
-        String funcName = "text";
-        PyObject someFunc = interpreter.get(funcName);
-            someFunc.__call__(new PyString(str1));
-        } catch (PyException e) {
-            e.printStackTrace();
-        }*/
-        String[] arguments = {"Text_Processing.py", str1};
-        PythonInterpreter.initialize(System.getProperties(), System.getProperties(), arguments);
-        org.python.util.PythonInterpreter python = new org.python.util.PythonInterpreter();
-        OutputStream out = new OutputStream() {
-            @Override
-            public void write(int i) throws IOException {
-
+        ArrayList<String> noune = new ArrayList<String>();
+        ArrayList<String> verbe = new ArrayList<String>();
+        ArrayList<String> compounde = new ArrayList<String>();
+        noune = intersection(tokens, noun);
+        verbe = intersection(tokens, verb);
+        compounde = intersection(tokens, compound);
+        int x = noune.size();
+        int y = verbe.size();
+        int a = compounde.size();
+        String g = verbe.get(0);
+        int u = 0;
+        for (int i = 0; i < g.length(); i++) {
+            u += (int) (g.charAt(i));
+        }
+        if (x >= 1 && y >= 1) {
+            if (a > 0 && y > 1) {
+                int b = str.indexOf("off");
+                int c = str.indexOf("on");
+                int d = -1, e = -1;
+                if (str.contains("light"))
+                    d = str.indexOf("light");
+                else if (str.contains("lights"))
+                    d = str.indexOf("lights");
+                if (str.contains("fan"))
+                    d = str.indexOf("fan");
+                else if (str.contains("fans"))
+                    d = str.indexOf("fans");
+                int i = abs(d - c);
+                int j = abs(d - b);
+                if (i > j) {
+                    light = 1;
+                    fan = 0;
+                } else {
+                    light = 0;
+                    fan = 0;
+                }
+                if (x == 2 && y == 1) {
+                    if (u == 315) {
+                        light = 0;
+                        fan = 0;
+                    } else {
+                        light = 1;
+                        fan = 1;
+                    }
+                }
             }
-        };
-        python.setOut(out);
-        //String code = this.getAssets().open("text_processing.py").toString();
-        String code = "def text(z):\n" +
-                "    pp=z.lower()\n" +
-                "    noun=[\"fan\",\"light\",\"lights\",\"fans\"]\n" +
-                "    verb=[\"on\",\"off\"]\n" +
-                "    compound=[\"and\",\"but\"]\n" +
-                "    token=pp.split(\",\")\n" +
-                "    noune=list(set(token)& set(noun))\n" +
-                "    verbo=list(set(token)& set(verb))\n" +
-                "    compounde=list(set(token)& set(compound))\n" +
-                "    x=len(noune)\n" +
-                "    y=len(verbo)\n" +
-                "    a=len(compound)\n" +
-                "    g=verbo[0]\n" +
-                "    u=0\n" +
-                "    light=3\n" +
-                "    fan=3\n" +
-                "    for g in g:\n" +
-                "        u=u+ord(g)\n" +
-                "    if(a>0 and y>1):\n" +
-                "        b=pp.index(\"on\")\n" +
-                "        c=pp.index(\"off\")\n" +
-                "        d=pp.index(\"light\"or \"lights\")\n" +
-                "        e=pp.index(\"fan\"or \"fans\")\n" +
-                "        g=abs(d-c)\n" +
-                "        h=abs(d-b)\n" +
-                "        if(g>h):\n" +
-                "            light=1\n" +
-                "            fan=0\n" +
-                "        else:\n" +
-                "            light=0\n" +
-                "            fan=1\n" +
-                "    if(x==2 and y==1):\n" +
-                "        if u==315:\n" +
-                "            light=0\n" +
-                "            fan=0\n" +
-                "        else:\n" +
-                "            light=1\n" +
-                "            fan=1\n" +
-                "    if(((\"light\" or \"lights\")in noune) and (u==315)):\n" +
-                "        light=0\n" +
-                "    elif(((\"light\" or \"lights\")in noune) and (u!=315)):\n" +
-                "        light=1\n" +
-                "    if(((\"fan\" or \"fans\")in noune)and (u==315)):\n" +
-                "        fan=0\n" +
-                "    elif(((\"fans\" or \"fan\") in noune) and (u!=315)):\n" +
-                "        fan=1\n" +
-                "    print (\"Yeah\")";
-
-        try {
-            FileOutputStream outputStream = context.openFileOutput("script.py", Context.MODE_PRIVATE);
-            outputStream.write(code.getBytes());
-            outputStream.close();
-
-            File file = new File(context.getFilesDir() + "/script.py");
-            python.execfile(file.getAbsolutePath());
-        } catch (IOException e) {
-
+            if ((noune.contains("light") || noune.contains("lights")) && u == 315)
+                light = 0;
+            else if ((noune.contains("light") || noune.contains("lights")) && u != 315)
+                light=1;
+            if ((noune.contains("fan") || noune.contains("fans")) && u == 315)
+                fan = 0;
+            else if ((noune.contains("fan") || noune.contains("fans")) && u != 315)
+                fan=1;
+            return 0;
         }
-        String outputStr = out.toString();
-        System.out.println(outputStr);
+        else{
+
+            textView.setText("You have given wrong command "+x +" "+y+" "+tokens.toString());
+            return -1;
+        }
+    }
+    public <T> ArrayList<T> intersection(ArrayList<T> list1, ArrayList<T> list2) {
+        ArrayList<T> list = new ArrayList<T>();
+
+        for (T t : list1) {
+            if(list2.contains(t)) {
+                list.add(t);
+            }
+        }
+        return list;
+    }
+
+    public int getFan() {
+        return fan;
+    }
+
+    public int getLight() {
+        return light;
     }
 }
