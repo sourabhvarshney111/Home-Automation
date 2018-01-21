@@ -15,9 +15,10 @@ import java.util.Locale;
 
 public class MainActivity extends Activity {
 
-    private TextView txtSpeechInput;
+    private TextView txtSpeechInput,output;
     private ImageButton btnSpeak;
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    Text_processing textProcessing= new Text_processing();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         txtSpeechInput = (TextView) findViewById(R.id.txtSpeechInput);
+        output= (TextView) findViewById(R.id.output);
         btnSpeak = (ImageButton) findViewById(R.id.btnSpeak);
 
 
@@ -67,30 +69,49 @@ public class MainActivity extends Activity {
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
-
+                    try{
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    txtSpeechInput.setText(result.toString());
-                    Text_processing textProcessing= new Text_processing();
-                    int flag=textProcessing.txt_pro(result.toString(),txtSpeechInput);
+                    String result1=new String();
+                    if(result.size()>1)
+                        result1=result.get(0);
+                    else
+                        result1=result.toString();
+                    result1=result1.replace("fence","fans");
+                    if(!result1.contains("off"))
+                        result1=result1.replace("of","off");
+                    result1=result1.replace("button","but turn");
+                    txtSpeechInput.setText("Command: "+result1);
+                    result1=result1.replace('[',' ');
+                    result1=result1.replace(']',' ');
+                    result1=result1.replace("down","off");
+                    result1=result1.replace("up","on");
+                    result1=result1.replace("in","on");
+                    result1=result1.replace("out","off");
+                    int flag=textProcessing.txt_pro(result1,output,txtSpeechInput);
                     if(flag==0)
                     {
                         if(textProcessing.getFan()==0&&textProcessing.getLight()==0)
                         {
-                            txtSpeechInput.setText("Current Status:\n"+"Lights: OFF\n"+"Fans: OFF");
+                            output.setText("Current Status:\n"+"Lights: OFF\n"+"Fans: OFF");
                         }
                         else if(textProcessing.getFan()==1&&textProcessing.getLight()==0)
                         {
-                            txtSpeechInput.setText("Current Status:\n"+"Lights: OFF\n"+"Fans: ON");
+                            output.setText("Current Status:\n"+"Lights: OFF\n"+"Fans: ON");
                         }
                         else if(textProcessing.getFan()==0&&textProcessing.getLight()==1)
                         {
-                            txtSpeechInput.setText("Current Status:\n"+"Lights: ON\n"+"Fans: OFF");
+                            output.setText("Current Status:\n"+"Lights: ON\n"+"Fans: OFF");
                         }
                         else
-                            txtSpeechInput.setText("Current Status:\n"+"Lights: ON\n"+"Fans: ON");
+                            output.setText("Current Status:\n"+"Lights: ON\n"+"Fans: ON");
+                    }
+                    }
+                    catch(Exception e){
+                        txtSpeechInput.setText("You have given Wrong Command");
                     }
                 }
+
                 break;
             }
 
