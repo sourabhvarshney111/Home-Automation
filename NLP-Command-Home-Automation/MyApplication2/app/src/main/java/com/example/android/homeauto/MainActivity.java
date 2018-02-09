@@ -1,8 +1,6 @@
 package com.example.android.homeauto;
 
-import android.content.Context;
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +10,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Locale;
-
-import static android.R.attr.data;
 
 public class MainActivity extends Activity {
 
@@ -77,7 +74,6 @@ public class MainActivity extends Activity {
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
-                    try{
                         ArrayList<String> result = data
                                 .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                         String result1=new String();
@@ -85,6 +81,7 @@ public class MainActivity extends Activity {
                             result1=result.get(0);
                         else
                             result1=result.toString();
+                        try{
                         result1=result1.replace("fence","fans");
                         if(!result1.contains("off"))
                             result1=result1.replace("of","off");
@@ -114,7 +111,7 @@ public class MainActivity extends Activity {
                         }
                     }
                     catch(Exception e){
-                        txtSpeechInput.setText("You have given Wrong Command");
+                        txtSpeechInput.setText("You have given wrong command " + "\""+result1+"\"");
                     }
                 }
 

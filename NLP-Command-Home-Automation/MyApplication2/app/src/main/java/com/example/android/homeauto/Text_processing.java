@@ -50,7 +50,7 @@ public class Text_processing extends Activity {
             u += (int) (g.charAt(i));
         }
         if (x >= 1 && y >= 1) {
-            if (a > 0 && y > 1) {
+            if (a >=0 && y > 1) {
                 int b = str.indexOf("on");
                 int c = str.indexOf("off");
                 int d, e;
@@ -89,7 +89,7 @@ public class Text_processing extends Activity {
         }
         else{
 
-            textView1.setText("You have given wrong command ");
+            textView1.setText("You have given wrong command " + "\""+str1+"\"");
             return -1;
         }
     }
