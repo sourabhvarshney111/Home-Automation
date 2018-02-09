@@ -97,30 +97,4 @@ class BackPropagationNetwork:
 		else:
 			der=self.sgm(x)
 			return der*(1-der)
-# 
-# if script run --create a test object
-# 
-if __name__=="__main__":
-	 bpn=BackPropagationNetwork((2,2,1))
-	 print (bpn.shape)
-	 print (bpn.weights)
-
-	 lvInput=np.array([[0,0],[1,1],[0,1],[1,0]])
-	 lvTarget=np.array([[0.0],[0.0],[1.0],[1.0]])
-
-	 lnMax=100000
-	 lnErr=1e-5
-	 for i in range(lnMax+1):
-	 	err=bpn.TrainEpoch(lvInput,lvTarget)
-	 	if i%2500==0:
-	 		print ("Iteration {0}\tError: {1:0.6f}".format(i,err))
-	 	if err<=lnErr:
-	 		print ("Minimum error reached at iteration {0}".format(i))
-	 		break
-
-	 #Display output
-	 lvOutput=bpn.Run(lvInput)
-	 print(bpn.weights)
-	 print ("Input: {0}\nOutput: {1}".format(lvInput,lvOutput))
-
 
