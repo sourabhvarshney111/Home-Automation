@@ -6,25 +6,27 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import static java.lang.Math.abs;
-
 public class Text_processing extends Activity {
     ArrayList<String> noun=new ArrayList<String>();
     ArrayList<String> verb= new ArrayList<String>();
     ArrayList<String> compound = new ArrayList<String>();
-    int fan,light;
+    int[] light= new int[10];
 
     public Text_processing(){
-        noun.add("fan");
-        noun.add("fans");
-        noun.add("light");
-        noun.add("lights");
+        noun.add("living");
+        noun.add("guest");
+        noun.add("drawing");
+        noun.add("bedroom");
+        noun.add("bathroom");
+        noun.add("kitchen");
+        noun.add("dining");
+        noun.add("toilet");
+        noun.add("entrance");
+        noun.add("attached");
         verb.add("on");
         verb.add("off");
-        compound.add("and");
-        compound.add("but");
-        fan=0;
-        light=0;
+        for(int i=0;i<10;i++)
+            light[i]=0;
     }
     public int txt_pro(String str1, TextView textView1) {
         String str = str1.toLowerCase();
@@ -43,55 +45,17 @@ public class Text_processing extends Activity {
             return -1;
         int x = noune.size();
         int y = verbe.size();
-        int a = compounde.size();
-        String g = verbe.get(0);
-        int u = 0;
-        for (int i = 0; i < g.length(); i++) {
-            u += (int) (g.charAt(i));
-        }
-        if (x >= 1 && y >= 1) {
-            if (a >=0 && y > 1) {
-                int b = str.indexOf("on");
-                int c = str.indexOf("off");
-                int d, e;
-                d = str.indexOf("light");
-                e = str.indexOf("fan");
-                int i = abs(d - c);
-                int j = abs(d - b);
-                if (i > j) {
-                    light = 1;
-                    fan = 0;
-                    return 0;
-                } else {
-                    light = 0;
-                    fan = 1;
-                    return 0;
-                }
-            }
-            if (x == 2 && y == 1) {
-                if (u == 315) {
-                    light = 0;
-                    fan = 0;
-                } else {
-                    light = 1;
-                    fan = 1;
-                }
-            }
-            if ((noune.contains("light") || noune.contains("lights")) && u == 315)
-                light = 0;
-            else if ((noune.contains("light") || noune.contains("lights")) && u != 315)
-                light = 1;
-            if ((noune.contains("fan") || noune.contains("fans")) && u == 315)
-                fan = 0;
-            else if ((noune.contains("fan") || noune.contains("fans")) && u != 315)
-                fan = 1;
-            return 0;
-        }
-        else{
-
-            textView1.setText("You have given wrong command " + "\""+str1+"\"");
+        if(x>2){
+            textView1.setText("System can only handle two room commands at maximum");
             return -1;
         }
+        if(y==2)
+            Bifunction(str,noune);
+        else if((y==1) && (verbe.contains("on")))
+            OnFunction(noune);
+        else if((y==1) && (verbe.contains("off")))
+            Offfunction(noune);
+        return 0;
     }
     public <T> ArrayList<T> intersection(ArrayList<T> list1, ArrayList<T> list2,TextView textView1) {
         ArrayList<T> list = new ArrayList<T>();
@@ -107,11 +71,111 @@ public class Text_processing extends Activity {
         return list;
     }
 
-    public int getFan() {
-        return fan;
-    }
-
-    public int getLight() {
+    public int[] getLight() {
         return light;
+    }
+    private int DataDecision(int p,int q,int r){
+        int x;
+        if(p<q){
+            if(r>p && r<q)
+                x=1;
+            else
+                x=0;
+        }
+        else{
+            if(r>p && r>q)
+                x=1;
+            else
+                x=0;
+        }
+        return x;
+    }
+    private void OnFunction(ArrayList<String> noune){
+        if(noune.contains("living"))
+            light[0]=1;
+        if(noune.contains("guest"))
+            light[1]=1;
+        if(noune.contains("drawing"))
+            light[2]=1;
+        if(noune.contains("bedroom"))
+            light[3]=1;
+        if(noune.contains("kitchen"))
+            light[4]=1;
+        if(noune.contains("drawing"))
+            light[5]=1;
+        if(noune.contains("bathroom"))
+            light[6]=1;
+        if(noune.contains("toilet"))
+            light[7]=1;
+        if(noune.contains("entrance"))
+            light[8]=1;
+        if(noune.contains("attached"))
+            light[9]=1;
+    }
+    private void Offfunction(ArrayList<String> noune){
+        if(noune.contains("living"))
+            light[0]=0;
+        if(noune.contains("guest"))
+            light[1]=0;
+        if(noune.contains("drawing"))
+            light[2]=0;
+        if(noune.contains("bedroom"))
+            light[3]=0;
+        if(noune.contains("kitchen"))
+            light[4]=0;
+        if(noune.contains("drawing"))
+            light[5]=0;
+        if(noune.contains("bathroom"))
+            light[6]=0;
+        if(noune.contains("toilet"))
+            light[7]=0;
+        if(noune.contains("entrance"))
+            light[8]=0;
+        if(noune.contains("attached"))
+            light[9]=0;
+    }
+    private void Bifunction(String str,ArrayList<String> noune){
+        int p=str.indexOf("on");
+        int q=str.indexOf("off"),r;
+        if(noune.contains("living")){
+            r=str.indexOf("living");
+            light[0]=DataDecision(p,q,r);
+        }
+        if(noune.contains("guest")){
+            r=str.indexOf("guest");
+            light[1]=DataDecision(p,q,r);
+        }
+        if(noune.contains("drawing")){
+            r=str.indexOf("drawing");
+            light[2]=DataDecision(p,q,r);
+        }
+        if(noune.contains("bedroom")){
+            r=str.indexOf("bedroom");
+            light[3]=DataDecision(p,q,r);
+        }
+        if(noune.contains("kitchen")){
+            r=str.indexOf("kitchen");
+            light[4]=DataDecision(p,q,r);
+        }
+        if(noune.contains("dining")){
+            r=str.indexOf("dining");
+            light[5]=DataDecision(p,q,r);
+        }
+        if(noune.contains("bathroom")){
+            r=str.indexOf("bathroom");
+            light[6]=DataDecision(p,q,r);
+        }
+        if(noune.contains("toilet")){
+            r=str.indexOf("toilet");
+            light[7]=DataDecision(p,q,r);
+        }
+        if(noune.contains("entrance")){
+            r=str.indexOf("entrance");
+            light[8]=DataDecision(p,q,r);
+        }
+        if(noune.contains("attached")){
+            r=str.indexOf("attached");
+            light[9]=DataDecision(p,q,r);
+        }
     }
 }

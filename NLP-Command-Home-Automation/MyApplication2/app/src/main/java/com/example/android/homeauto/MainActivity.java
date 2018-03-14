@@ -91,23 +91,17 @@ public class MainActivity extends Activity {
                         result1=result1.replace(']',' ');
                         result1=result1.replace("down","off");
                         result1=result1.replace("up","on");
-                        result1=result1.replace("in","on");
                         result1=result1.replace("out","off");
+                        result1=result1.replace("live in","living");
+                        result1=result1.replace("draw in","drawing");
+                        result1=result1.replace("bed room","bedroom");
+                        result1=result1.replace("bath room","bathroom");
+                        result1=result1.replace("dine in","dining");
+                        if(result1.contains("attached"))
+                            result1=result1.replace("bathroom","");
                         int flag=textProcessing.txt_pro(result1,txtSpeechInput);
                         if(flag==0) {
-                            if (textProcessing.getFan() == 0 && textProcessing.getLight() == 0) {
-                                order = "00";
-                                output.setText("Current Status:\n" + "Lights: OFF\n" + "Fans: OFF");
-                            } else if (textProcessing.getFan() == 1 && textProcessing.getLight() == 0) {
-                                order = "01";
-                                output.setText("Current Status:\n" + "Lights: OFF\n" + "Fans: ON");
-                            } else if (textProcessing.getFan() == 0 && textProcessing.getLight() == 1) {
-                                order = "10";
-                                output.setText("Current Status:\n" + "Lights: ON\n" + "Fans: OFF");
-                            } else {
-                                order="00";
-                                output.setText("Current Status:\n" + "Lights: ON\n" + "Fans: ON");
-                            }
+                            //write your code logic to send output to arduino
                         }
                     }
                     catch(Exception e){
