@@ -49,6 +49,10 @@ public class Text_processing extends Activity {
             textView1.setText("System can only handle two room commands at maximum");
             return -1;
         }
+        else if(x<=0||y<=0){
+            textView1.setText("You have given wrong command. System contains previous values");
+            return -1;
+        }
         if(y==2)
             Bifunction(str,noune);
         else if((y==1) && (verbe.contains("on")))
@@ -64,8 +68,6 @@ public class Text_processing extends Activity {
             if(list2.contains(t)) {
                 if(!list.contains(t))
                     list.add(t);
-                else if(t.equals("light")||t.equals("lights")||t.equals("fan")||t.equals("fans"))
-                    textView1.setText("Unrecognized Command");
             }
         }
         return list;

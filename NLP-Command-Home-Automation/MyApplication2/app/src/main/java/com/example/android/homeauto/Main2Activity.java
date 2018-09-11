@@ -27,12 +27,14 @@ public class Main2Activity extends AppCompatActivity {
         static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
         TextView ta;
         ListView lv;
+        String ro="";
         MainActivity obj=new MainActivity();
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main2);
             lv = (ListView) findViewById(R.id.lv);
+            ro = getIntent().getStringExtra("order");
             b1 = (Button) findViewById(R.id.button);
             b2 = (Button) findViewById(R.id.button2);
             b4 = (Button) findViewById(R.id.button4);
@@ -95,7 +97,7 @@ public class Main2Activity extends AppCompatActivity {
 
         public void led_on(View v) {
             try {
-                String i = obj.order;
+                String i = "" + ro;
                 if (btSocket != null) {
                     Toast.makeText(getApplicationContext(),i, Toast.LENGTH_SHORT).show();
                     btSocket.getOutputStream().write(i.toString().getBytes());

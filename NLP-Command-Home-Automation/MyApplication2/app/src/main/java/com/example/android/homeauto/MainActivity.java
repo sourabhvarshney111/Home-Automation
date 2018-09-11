@@ -101,7 +101,8 @@ public class MainActivity extends Activity {
                             result1=result1.replace("bathroom","");
                         int flag=textProcessing.txt_pro(result1,txtSpeechInput);
                         if(flag==0) {
-                            //write your code logic to send output to arduino
+                            for(int i=0;i<10;i++)
+                                order+=textProcessing.light[i];
                         }
                     }
                     catch(Exception e){
@@ -117,6 +118,7 @@ public class MainActivity extends Activity {
     public void send(View v)
     {
         Intent i=new Intent(this,Main2Activity.class);
+        i.putExtra("order",order);
         startActivity(i);
         //setContentView(R.layout.activity_main2);
         //  finish();
