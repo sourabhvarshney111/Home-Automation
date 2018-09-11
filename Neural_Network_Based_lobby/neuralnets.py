@@ -1,100 +1,80 @@
 import numpy as np
+import csv
 
-class BackPropagationNetwork:
-	"""This is a backpropagating training neural network"""
-	#identifiers
-	# 
-	layerCount=0
-	shape=None
-	weights=[]
-	# 
-	# class members
-	# 
-	def __init__(self,layerSize):
-		"""Initialize the network"""
+#X= np.array([[1,1],[1,0],[0,0]])
+#Y= np.array([[0],[1],[0]])
+X= np.genfromtxt("Datasets/train_input.csv", delimiter= ",")
+Y= np.genfromtxt("Datasets/train_output.csv", delimiter=",")
+X/=100
+print(X.shape)
 
-		# Layer info
-		self.layerCount=len(layerSize)-1
-		self.shape=layerSize
-
-		# Data from last run
-		self.layerInput=[]
-		self.layerOutput=[]
-		self.previousWeightDelta=[]
-
-		# Create the weight arrays
-		for (l1,l2) in zip(layerSize[:-1],layerSize[1:]):
-			self.weights.append(np.random.normal(scale=0.16,size=(l2,l1+1)))
-			self.previousWeightDelta.append(np.random.normal(scale=0.16,size=(l2,l1+1)))
-
-	# 
-	# Run method
-	# 
-	def Run(self,input):
-		"""Run the network based on Inputs"""
-		lnCases=input.shape[0]
-
-		# Clear out the previous intermediate value lists
-		self.layerInput=[]
-		self.layerOutput=[]
-
-		# Run loop
-		for index in range(self.layerCount):
-			 # Determine layer input
-			 if index==0:
-			 	layer_Input=self.weights[0].dot(np.vstack([input.T,np.ones([1,lnCases])]))
-			 else:
-			 	layer_Input=self.weights[index].dot(np.vstack([self.layerOutput[-1],np.ones([1,lnCases])]))
-
-			 self.layerInput.append(layer_Input)
-			 self.layerOutput.append(self.sgm(layer_Input))
-
-		return self.layerOutput[-1].T
-	# 
-	# TrainEpoch method
-	#
-	def TrainEpoch(self,input,target,trainingRate=0.07,momentum=0.5):
-		"""This method trains the network for one epoch"""
-		delta=[]
-		lnCases=input.shape[0]
-
-		# First run the network
-		self.Run(input)
-
-		# Calculate our deltas
-		for index in reversed(range(self.layerCount)):
-			if index==self.layerCount-1:
-				# Compare to the target values
-				# print self._layerOutput[index]
-				output_delta=self.layerOutput[index]-target.T
-				error=np.sum(output_delta**2)
-				delta.append(output_delta*self.sgm(self.layerInput[index],True))
-			else:
-				# Compare to the following layer's delta
-				delta_pullback=self.weights[index+1].T.dot(delta[-1])
-				delta.append(delta_pullback[:-1, :]*self.sgm(self.layerInput[index],True))
-
-		# Compute the weight deltas
-		for index in range(self.layerCount):
-			delta_index=self.layerCount-1-index
-			if index==0:
-				layer_Output=np.vstack([input.T,np.ones([1,lnCases])])
-			else:
-				layer_Output=np.vstack([self.layerOutput[index-1],np.ones([1,self.layerOutput[index-1].shape[1]])])
-			curWeightDelta=np.sum(layer_Output[None,:,:].transpose(2,0,1)*delta[delta_index][None,:,:].transpose(2,1,0), axis=0)
-			weightDelta=trainingRate*curWeightDelta+momentum*self.previousWeightDelta[index]
-			self.weights[index]-=weightDelta
-			self.previousWeightDelta[index]=weightDelta
-
-		return error
+input_layerSize= X.shape[1]
+hidden_layerSize= 30
+output_layerSize= Y.shape[1]
+epoch = 120000
+lr= 0.0003
 
 
+def sigmoid(x):
+	np.clip(x, -1000, 1000)
+	return 1/(1+np.exp(-x))
+	
+def derivative_sigmoid(x):
+	return x*(1-x)
+	
+def cost(y, t):
+	return np.sum(np.multiply(t, np.log(y)) + np.multiply((1-t), np.log(1-y)))
 
-	# Transfer function
-	def sgm(self,x,Derivative=False):
-		if not Derivative:
-			return 1/(1+np.exp(-x))
+wh=  np.random.normal(scale= 0.1, size= (input_layerSize, hidden_layerSize))
+wout= np.random.normal(scale= 0.1, size= (hidden_layerSize, output_layerSize))
+bh= np.random.normal(scale=0.1, size= (1, hidden_layerSize))
+bout= np.random.normal(scale= 0.1, size= (1, output_layerSize))
+
+print(wh)
+#print(X.shape)
+#print(wh.shape)
+
+for i in range(epoch):
+	
+	#forward feedback
+	hidden_layer_input1= np.dot(X, wh)
+	hidden_layer_input= hidden_layer_input1 + bh
+	hidden_layer_activation = sigmoid(hidden_layer_input)
+	output_layer_input1 = np.dot(hidden_layer_activation, wout)
+	output_layer_input = output_layer_input1+  bout
+	output= sigmoid(output_layer_input)
+
+	#back propogation
+	E= Y- output
+	error= np.sum(E**2)/800
+	print("Error at %d = %d", i, error)
+	d_output= E* derivative_sigmoid(output)
+	wout+= hidden_layer_activation.T.dot(d_output)*lr
+	error_hidden_layer= d_output.dot(wout.T)
+	d_hidden_layer= error_hidden_layer* derivative_sigmoid(hidden_layer_activation)
+	wh+= X.T.dot(d_hidden_layer)*lr
+	bout= bout+ np.sum(d_output, axis= 0)*lr
+	bh+= np.sum(d_hidden_layer, axis=0)* lr
+	
+X= np.genfromtxt("test_input.csv", delimiter= ",")
+Y= np.genfromtxt("test_output.csv", delimiter= ",")
+X/=100
+
+hidden_layer_input1= np.dot(X, wh)
+hidden_layer_input= hidden_layer_input1 + bh
+hidden_layer_activation = sigmoid(hidden_layer_input)
+output_layer_input1 = np.dot(hidden_layer_activation, wout)
+output_layer_input = output_layer_input1+  bout
+output= sigmoid(output_layer_input)
+
+c=0
+for i in range(214):
+	for j in range(5):
+		if output[i][j]>0.5:
+			output[i][j]=1
 		else:
-			der=self.sgm(x)
-			return der*(1-der)
+			output[i][j]=0
+		if output[i][j]==Y[i][j]:
+				c+=1
+print(c/(214*5))			
 
