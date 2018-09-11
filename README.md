@@ -12,11 +12,14 @@ The network learns the pattern of bulbs in the lobby according to the intensity 
 ### Installations 
 To use this implementation, you will require following:
 1. Python 3.6
-``` sudo apt-get install pip
+```
+sudo apt-get install pip
 sudo pip install python3
 ```
 2. Numpy: 
-``` sudo apt-get install Numpy```
+```
+sudo apt-get install Numpy
+```
 
 3. PLX-DAQ: To save data obtained by LDR sensors as excel file. Refer http://www.instructables.com/id/Sending-data-from-Arduino-to-Excel-and-plotting-it/ for installation
 
