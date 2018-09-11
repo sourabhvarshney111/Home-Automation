@@ -17,7 +17,7 @@ sudo apt-get install python3
 ```
 2. Numpy: 
 ```
-sudo apt install python3-pip
+sudo apt install python3-numpy
 ```
 
 3. PLX-DAQ: To save data obtained by LDR sensors as excel file. Refer http://www.instructables.com/id/Sending-data-from-Arduino-to-Excel-and-plotting-it/ for installation
