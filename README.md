@@ -31,3 +31,7 @@ The keywords for the use cases are identified. Then the voice command is process
 
 ### Installations
 This requires installations of hardware and hence require the technician to connect the devices with the microcontroller. Then installation of APK file for the application and the project is ready to use.
+
+
+## Repo Analysis Tool
+[![DeepSource](https://deepsource.io/gh/sourabhvarshney111/Home-Automation.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/sourabhvarshney111/Home-Automation/?ref=repository-badge)
