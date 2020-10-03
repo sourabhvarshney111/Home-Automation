@@ -1,4 +1,8 @@
 # Home Automation
+
+## Repo Analysis Tool
+[![DeepSource](https://deepsource.io/gh/sourabhvarshney111/Home-Automation.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/sourabhvarshney111/Home-Automation/?ref=repository-badge)
+
 The Project is based on the idea to automate Home using the algorithms of Machine Learning. The projects covers two major parts:
 1. Neural Network Based Lobby
 2. Command Operated Electronic Appliances
@@ -32,6 +36,3 @@ The keywords for the use cases are identified. Then the voice command is process
 ### Installations
 This requires installations of hardware and hence require the technician to connect the devices with the microcontroller. Then installation of APK file for the application and the project is ready to use.
 
-
-## Repo Analysis Tool
-[![DeepSource](https://deepsource.io/gh/sourabhvarshney111/Home-Automation.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/sourabhvarshney111/Home-Automation/?ref=repository-badge)
